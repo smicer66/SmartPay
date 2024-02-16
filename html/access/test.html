@@ -1,0 +1,296 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0091)https://www.zm.secure.barclays.com/bir/feature/loginprocess?execution=e1s1&_t=1407945783138 -->
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Log in - Barclays Internet Banking
+</title>
+<link href="/resources/css/barclay/reset.css" type="text/css" rel="stylesheet">
+<link href="/resources/css/barclay/common.css" type="text/css" rel="stylesheet">
+<link href="/resources/css/barclay/login.css" type="text/css" rel="stylesheet">
+<link href="/resources/css/barclay/cpsKeyboard.css" type="text/css" rel="stylesheet">
+<link href="/resources/css/barclay/thickbox.css" rel="stylesheet" type="text/css">
+<link href="/resources/css/barclay/tips.css" rel="stylesheet" type="text/css">
+<link href="/resources/css/barclay/keyboardstyle.css" type="text/css" rel="stylesheet">
+</head>
+<body style="background: #EFEBEF; font-family:Tahoma;color: #333; font-size:12px;">
+
+<%@ include file="/html/portlet/login/init.jsp" %>
+
+<c:choose>
+	<c:when test="<%= themeDisplay.isSignedIn() %>">
+		<div style="border-top:1px #cccccc solid; border-bottom:1px #cccccc solid; padding:20px; ">
+		<%
+		String signedInAs = HtmlUtil.escape(user.getFullName());
+
+		if (themeDisplay.isShowMyAccountIcon()) {
+			signedInAs = "<strong>" + signedInAs + "!<a href='/c/portal/logout'>&nbsp;<span style='padding:10px; background-color:red; color:white'>Logout?</span></a></strong>";
+		}
+		%>
+
+		<%= LanguageUtil.format(pageContext, "you-are-signed-in-as-x", signedInAs, false) %>
+		
+		<%
+		
+		%>
+		</div>
+	</c:when>
+	<c:otherwise>
+
+		<%
+		String redirect = ParamUtil.getString(request, "redirect");
+
+		String login = LoginUtil.getLogin(request, "login", company);
+		String password = StringPool.BLANK;
+		boolean rememberMe = ParamUtil.getBoolean(request, "rememberMe");
+
+		if (Validator.isNull(authType)) {
+			authType = company.getAuthType();
+		}
+		%>
+
+		<portlet:actionURL secure="<%= PropsValues.COMPANY_SECURITY_AUTH_REQUIRES_HTTPS || request.isSecure() %>" var="loginURL">
+			<portlet:param name="saveLastPath" value="0" />
+			<portlet:param name="struts_action" value="/login/login" />
+			<portlet:param name="doActionAfterLogin" value="<%= portletName.equals(PortletKeys.FAST_LOGIN) ? Boolean.TRUE.toString() : Boolean.FALSE.toString() %>" />
+		</portlet:actionURL>
+        
+        
+        
+        
+<div id="blindNav" style="display: none">
+<p>Navigation for visually impaired users:<a href="https://www.zm.secure.barclays.com/bir/feature/loginprocess?execution=e1s1&_t=1407945783138#top_menu_anchor" id="alt_N" accesskey="n">skip to
+navigation</a>,<a href="https://www.zm.secure.barclays.com/bir/feature/loginprocess?execution=e1s1&_t=1407945783138#sidebar_menu_anchor" id="alt_R" accesskey="r">skip
+to right menu</a>, or <a href="https://www.zm.secure.barclays.com/bir/feature/loginprocess?execution=e1s1&_t=1407945783138#content_anchor" id="alt_S" accesskey="s">skip
+to main content</a>.</p>
+</div>
+<div id="bg">
+<div class="frame">
+<div class="left alpha_0" style=""></div>
+<div class="middle alpha_0">
+<div tabindex="-1&#39;" title="Welcome to Barclays Internet Banking" role="banner" class="logo">
+<img src="/resources/css/barclay/barclays.gif">
+</div>
+<div class="pnl">
+<div role="form" class="loginPnl"><form action="<%= loginURL %>" method="post" name="fm">
+									<input name="redirect" type="hidden" value="<%= redirect %>" />
+		
+									<c:choose>
+										<c:when test='<%= SessionMessages.contains(request, "user_added") %>'>
+						
+											<%
+											String userEmailAddress = (String)SessionMessages.get(request, "user_added");
+											String userPassword = (String)SessionMessages.get(request, "user_added_password");
+											%>
+						
+											<div class="portlet-msg-success">
+												<c:choose>
+													<c:when test="<%= company.isStrangersVerify() || Validator.isNull(userPassword) %>">
+														<%= LanguageUtil.get(pageContext, "thank-you-for-creating-an-account") %>
+						
+														<c:if test="<%= company.isStrangersVerify() %>">
+															<%= LanguageUtil.format(pageContext, "your-email-verification-code-has-been-sent-to-x", userEmailAddress) %>
+														</c:if>
+													</c:when>
+													<c:otherwise>
+														<%= LanguageUtil.format(pageContext, "thank-you-for-creating-an-account.-your-password-is-x", userPassword, false) %>
+													</c:otherwise>
+												</c:choose>
+						
+												<c:if test="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.ADMIN_EMAIL_USER_ADDED_ENABLED) %>">
+													<%= LanguageUtil.format(pageContext, "your-password-has-been-sent-to-x", userEmailAddress) %>
+												</c:if>
+											</div>
+										</c:when>
+										<c:when test='<%= SessionMessages.contains(request, "user_pending") %>'>
+						
+											<%
+											String userEmailAddress = (String)SessionMessages.get(request, "user_pending");
+											%>
+						
+											<div class="portlet-msg-success">
+												<%= LanguageUtil.format(pageContext, "thank-you-for-creating-an-account.-you-will-be-notified-via-email-at-x-when-your-account-has-been-approved", userEmailAddress) %>
+											</div>
+										</c:when>
+									</c:choose>
+						
+									<liferay-ui:error exception="<%= AuthException.class %>" message="authentication-failed" />
+									<liferay-ui:error exception="<%= CompanyMaxUsersException.class %>" message="unable-to-login-because-the-maximum-number-of-users-has-been-reached" />
+									<liferay-ui:error exception="<%= CookieNotSupportedException.class %>" message="authentication-failed-please-enable-browser-cookies" />
+									<liferay-ui:error exception="<%= NoSuchUserException.class %>" message="authentication-failed" />
+									<liferay-ui:error exception="<%= PasswordExpiredException.class %>" message="your-password-has-expired" />
+									<liferay-ui:error exception="<%= UserEmailAddressException.class %>" message="authentication-failed" />
+									<liferay-ui:error exception="<%= UserLockoutException.class %>" message="this-account-has-been-locked" />
+									<liferay-ui:error exception="<%= UserPasswordException.class %>" message="authentication-failed" />
+									<liferay-ui:error exception="<%= UserScreenNameException.class %>" message="authentication-failed" />
+									
+									<%
+									String loginLabel = null;
+					
+									if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
+										loginLabel = "email-address";
+									}
+									else if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
+										loginLabel = "screen-name";
+									}
+									else if (authType.equals(CompanyConstants.AUTH_TYPE_ID)) {
+										loginLabel = "id";
+									}
+									%>
+<div class="LanguageSelect">
+</div>
+<div>
+<div class="font3">Welcome to</div>
+<div class="font3 bold">Barclays eTax Platform</div>
+<br><br><table class="ssc_form_table" border="0" cellpadding="0" cellspacing="0" id="loginForm:j_id21"><tbody>
+  <tr>
+    <td colspan="2" class="ssc_form_label"><%
+									String loginLabel = null;
+					
+									if (authType.equals(CompanyConstants.AUTH_TYPE_EA)) {
+										loginLabel = "email-address";
+									}
+									else if (authType.equals(CompanyConstants.AUTH_TYPE_SN)) {
+										loginLabel = "screen-name";
+									}
+									else if (authType.equals(CompanyConstants.AUTH_TYPE_ID)) {
+										loginLabel = "id";
+									}
+									%>&nbsp;</td>
+    </tr>
+  <tr><td class="ssc_form_label"><label for="loginForm:loginName">Email</label></td><td class="ssc_form_value"><span class="bgSpan">
+
+<input type="text" name="login" id="login" class="form-control" maxlength="1000" autocomplete="off" style="width: 205px;
+border: 1 none;
+margin: 3px 0 3px 3px;" value="<%= login %>" placeholder="Primary Email Address"/></span></td></tr><tr><td class="ssc_form_label">
+<br></td><td class="ssc_form_value"></td></tr><tr><td class="ssc_form_label"><label for="loginForm:password">Password</label></td><td class="ssc_form_value"><span class="bgSpan"><input type="password" name="password" id="password" maxlength="1000" autocomplete="off" class="form-control" placeholder="Password" style="width: 205px;
+border: 0 none;
+margin: 3px 0 3px 3px;" value="<%= password %>"/></span></td></tr><tr><td class="ssc_form_label">
+<br></td><td class="ssc_form_value"></td></tr></tbody></table>
+<div class="indent">
+<div>Forgot Your<a class="ftBlue" href="https://www.zm.secure.barclays.com/bir/feature/forgotUsername">Username</a> / <a class="ftBlue" href="https://www.zm.secure.barclays.com/bir/feature/forgotPassword">Password?</a></div>
+<div id="dynamicKeyboard" align="left"></div>
+</div>
+<p class="indent">By logging in, you have agreed to the <a class="ftBlue" target="_blank" href="http://www.barclays.com/africa/zambia/downloads.html">Terms &amp; Conditions</a> of Internet Banking.
+</p>
+</div>
+<br>
+<div class="button">
+<div>
+<div class="secButton"><img src="/resources/css/barclay/logo_secure.gif"></div>
+<div class="loginButton btn fr"><a href="https://www.zm.secure.barclays.com/bir/feature/loginprocess?execution=e1s1&_t=1407945783138#" onclick=" return sscSubmitForm(&#39;loginForm&#39;,&#39;loginForm:loginLink&#39;,null,[[&#39;forward&#39;,&#39;true&#39;]]);" id="loginForm:loginLink" class="directional_0 lColor4 short">Log in
+<em class="tl"></em>
+<em class="tr"></em>
+<em class="bl"></em>
+<em class="br"></em></a>
+</div>
+</div>
+<div id="bubble" class="dialogue" style="display: none;">Your username must be at least 8-16 characters.
+<br><hr>Your password must be at least 8 characters.
+</div>
+<div class="helpText">
+<div class="tips"><a id="loginForm:j_id47" class="progressiveLink" onclick="Spring.remoting.submitForm(&#39;loginForm:j_id47&#39;, &#39;loginForm&#39;, {processIds: &#39;loginForm:j_id47, *&#39;, width : &#39;760&#39;, height : &#39;480&#39;, TB_window : &#39;true&#39;}); return false;" href="https://www.zm.secure.barclays.com/bir/feature/loginprocess?execution=e1s1&_t=1407945783138#" name="loginForm:j_id47">Security Tips</a>
+</div>
+<div class="help"><a href="javascript:void(0)" id="help">Help</a></div>
+</div>
+</div>
+<input type="hidden" name="_t" value="1407945784185"><input type="hidden" name="loginForm_SUBMIT" value="1"><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="e1s1"></form>
+</div>
+<div class="midPnl">
+<div class="font3">FAQs for</div>
+<div class="font3 bold">eTax Payments</div>
+<div style="line-height: 1.2;"></div>
+<br>
+<p><span>Get help online on how to use the payment platform</span></p>
+<div><form id="loginFormHelp" name="loginFormHelp" method="post" autocomplete="off" action="/resources/css/barclay/Log in - Barclays Internet Banking.htm" enctype="application/x-www-form-urlencoded"><input type="hidden" value="1982114790" name="CSRF_TOKEN"><a id="loginFormHelp:j_id61" class="helpLink progressiveLink" onclick="Spring.remoting.submitForm(&#39;loginFormHelp:j_id61&#39;, &#39;loginFormHelp&#39;, {processIds: &#39;loginFormHelp:j_id61, *&#39;, width : &#39;760&#39;, height : &#39;480&#39;, TB_window : &#39;true&#39;}); return false;" href="https://www.zm.secure.barclays.com/bir/feature/loginprocess?execution=e1s1&_t=1407945783138#" name="loginFormHelp:j_id61"></a><input type="hidden" name="loginFormHelp_SUBMIT" value="1"><input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="e1s1"></form>
+
+
+								<c:if test="<%= windowState.equals(WindowState.MAXIMIZED) %>">
+									<aui:script>
+										Liferay.Util.focusFormField(document.<portlet:namespace />fm.<portlet:namespace />login);
+									</aui:script>
+								</c:if>
+</div>
+<div class="registButton">
+<div class="btn fl">
+<a title="Sign-Up" aria-pressed="false" role="button" class="functional lColor4" href="https://www.zm.secure.barclays.com/bir/feature/onlineRegistration"><span>Help!</span><span class="arrow icon"></span>
+<em class="tl"></em>
+<em class="tr"></em>
+<em class="bl"></em>
+<em class="br"></em>
+</a>
+</div>
+</div>
+<div class="dashborder">
+<div class="contact_us">
+<p>Contact us: +260 211 366230 - 1 or 5950</p>
+<p>Mon-Fri During normal working hours.</p>
+<p>Email: customerservice.zambia@barclays.com</p>
+</div>
+</div>
+</div>
+<div class="regPnl">
+<div class="login_right"><h3></h3>
+<ul>
+<li>» <a href="https://www.zm.secure.barclays.com/bir/feature/forgotUsername">Forgot username</a></li>
+<li>» <a href="https://www.zm.secure.barclays.com/bir/feature/forgotPassword">Forgot password</a></li>
+<li>» <a href="https://www.zm.secure.barclays.com/bir/feature/forgotSQA">Forgot secret question</a></li>
+<li>» <a href="http://www.barclays.com/africa/zambia/cash-machine-locations.html">Nearest branch/ATM</a></li>
+<li>» <a href="http://www.barclays.com/africa/zambia/downloads.html">Online Banking FAQs</a></li>
+<li>» <a href="https://www.zm.secure.barclays.com/bir/feature/onlineRegistration?PREREGISTER=true">Pre-registered customer fulfillment</a></li>
+</ul>
+</div>
+<div class="rhtbanner">
+<div>
+<a href="http://www.barclays.com/africa/zambia/sms-alerts.html" title="Get your account updated by SMS" target="_blank">
+<img src="/resources/css/barclay/1290534220794.jpg" alt="Barclays Premier">
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="right alpha_0"></div>
+</div>
+<div class="dkb">
+<div id="keyboard" class="keyboard ui-draggable">
+<div id="close" class="close"><img height="17" width="24" alt="keyboard" src="/resources/css/barclay/keyboard_16.gif"></div>
+<div id="keyboard-bg" class="kbBackground">
+</div>
+</div>
+</div>
+<!-- footer -->
+<div class="footer">
+<div class="left alpha_0"></div>
+<div class="middle alpha_0">
+<label class="hiddenLabel" id="footerLinks">Footer Links</label>
+<ul tabindex="-1" aria-labelledby="footerLinks" role="navigation">
+<li class="first"><a href="http://www.barclays.com/africa/zambia/downloads.html" target="_blank">Schedule of Charges</a></li>
+<li><a>|</a></li>
+<li><a href="http://www.barclays.com/africa/zambia/downloads.html" target="_blank">Terms &amp; Conditions</a></li>
+</ul>
+<div tabindex="-1" role="contentinfo" id="contentinfo">
+<h5>
+<img src="/resources/css/barclay/premier.gif">	<br>
+<span class="premierText">Proud sponsors of the Barclays Premier League</span>
+</h5>
+</div>
+</div>
+<div class="right alpha_0"></div>
+</div>
+<!-- End footer -->
+</div>
+
+		<aui:script use="aui-base">
+			var password = A.one('#<portlet:namespace />password');
+
+			if (password) {
+				password.on(
+					'keypress',
+					function(event) {
+						Liferay.Util.showCapsLock(event, '<portlet:namespace />passwordCapsLockSpan');
+					}
+				);
+			}
+		</aui:script>
+	</c:otherwise>
+</c:choose>
+</body>

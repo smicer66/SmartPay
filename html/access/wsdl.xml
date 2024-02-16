@@ -1,0 +1,171 @@
+  <?xml version="1.0" encoding="UTF-8" ?> 
+- <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.bank.pmt.zra" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax23="http://bean.bank.pmt.zra/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://service.bank.pmt.zra">
+- <wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SigEncr">
+- <wsp:ExactlyOne>
+- <wsp:All>
+- <sp:AsymmetricBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+- <wsp:Policy>
+- <sp:InitiatorToken>
+- <wsp:Policy>
+- <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+- <wsp:Policy>
+  <sp:RequireThumbprintReference /> 
+  <sp:WssX509V3Token10 /> 
+  </wsp:Policy>
+  </sp:X509Token>
+  </wsp:Policy>
+  </sp:InitiatorToken>
+- <sp:RecipientToken>
+- <wsp:Policy>
+- <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+- <wsp:Policy>
+  <sp:RequireThumbprintReference /> 
+  <sp:WssX509V3Token10 /> 
+  </wsp:Policy>
+  </sp:X509Token>
+  </wsp:Policy>
+  </sp:RecipientToken>
+- <sp:AlgorithmSuite>
+- <wsp:Policy>
+  <sp:TripleDesRsa15 /> 
+  </wsp:Policy>
+  </sp:AlgorithmSuite>
+- <sp:Layout>
+- <wsp:Policy>
+  <sp:Strict /> 
+  </wsp:Policy>
+  </sp:Layout>
+  <sp:OnlySignEntireHeadersAndBody /> 
+  </wsp:Policy>
+  </sp:AsymmetricBinding>
+- <sp:Wss10 xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+- <sp:Policy>
+  <sp:MustSupportRefKeyIdentifier /> 
+  <sp:MustSupportRefIssuerSerial /> 
+  </sp:Policy>
+  </sp:Wss10>
+- <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+  <sp:Body /> 
+  </sp:SignedParts>
+- <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+  <sp:Body /> 
+  </sp:EncryptedParts>
+  </wsp:All>
+  </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:documentation>Please Type your service description here</wsdl:documentation> 
+- <wsdl:types>
+- <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://bean.bank.pmt.zra/xsd">
+- <xs:complexType name="EODPaymentNotifyReport">
+- <xs:sequence>
+  <xs:element minOccurs="0" name="amountPaid" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="bankBranchCode" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="bankTransNo" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="datePaid" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="paymentRegTransNo" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="status" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="taxPayerName" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="tin" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="transactionId" nillable="true" type="xs:string" /> 
+  </xs:sequence>
+  </xs:complexType>
+- <xs:complexType name="EODPaymentNotifyReportResponse">
+- <xs:sequence>
+  <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="errorMsg" nillable="true" type="xs:string" /> 
+  <xs:element maxOccurs="unbounded" minOccurs="0" name="pmtNotifyErrReport" nillable="true" type="ax23:EODPaymentNotifyErrReport" /> 
+  </xs:sequence>
+  </xs:complexType>
+- <xs:complexType name="EODPaymentNotifyErrReport">
+- <xs:sequence>
+  <xs:element minOccurs="0" name="amountPaid" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="bankBranchCode" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="datePaid" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="paymentRegTransNo" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="status" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="taxPayerName" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="tin" nillable="true" type="xs:string" /> 
+  <xs:element minOccurs="0" name="transactionId" nillable="true" type="xs:string" /> 
+  </xs:sequence>
+  </xs:complexType>
+  </xs:schema>
+- <xs:schema xmlns:ax24="http://bean.bank.pmt.zra/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.bank.pmt.zra">
+  <xs:import namespace="http://bean.bank.pmt.zra/xsd" /> 
+- <xs:element name="processPaymentNotificationReport">
+- <xs:complexType>
+- <xs:sequence>
+  <xs:element maxOccurs="unbounded" minOccurs="0" name="pmtNotifyReport" nillable="true" type="ax23:EODPaymentNotifyReport" /> 
+  </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+- <xs:element name="processPaymentNotificationReportResponse">
+- <xs:complexType>
+- <xs:sequence>
+  <xs:element minOccurs="0" name="return" nillable="true" type="ax23:EODPaymentNotifyReportResponse" /> 
+  </xs:sequence>
+  </xs:complexType>
+  </xs:element>
+  </xs:schema>
+  </wsdl:types>
+- <wsdl:message name="processPaymentNotificationReportRequest">
+  <wsdl:part name="parameters" element="ns:processPaymentNotificationReport" /> 
+  </wsdl:message>
+- <wsdl:message name="processPaymentNotificationReportResponse">
+  <wsdl:part name="parameters" element="ns:processPaymentNotificationReportResponse" /> 
+  </wsdl:message>
+- <wsdl:portType xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" name="EODPaymentNotificationReportServicePortType" wsp:PolicyURIs="#SigEncr">
+- <wsdl:operation name="processPaymentNotificationReport">
+  <wsdl:input message="ns:processPaymentNotificationReportRequest" wsaw:Action="urn:processPaymentNotificationReport" /> 
+  <wsdl:output message="ns:processPaymentNotificationReportResponse" wsaw:Action="urn:processPaymentNotificationReportResponse" /> 
+  </wsdl:operation>
+  </wsdl:portType>
+- <wsdl:binding name="EODPaymentNotificationReportServiceSoap11Binding" type="ns:EODPaymentNotificationReportServicePortType">
+  <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
+- <wsdl:operation name="processPaymentNotificationReport">
+  <soap:operation soapAction="urn:processPaymentNotificationReport" style="document" /> 
+- <wsdl:input>
+  <soap:body use="literal" /> 
+  </wsdl:input>
+- <wsdl:output>
+  <soap:body use="literal" /> 
+  </wsdl:output>
+  </wsdl:operation>
+  </wsdl:binding>
+- <wsdl:binding name="EODPaymentNotificationReportServiceSoap12Binding" type="ns:EODPaymentNotificationReportServicePortType">
+  <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" /> 
+- <wsdl:operation name="processPaymentNotificationReport">
+  <soap12:operation soapAction="urn:processPaymentNotificationReport" style="document" /> 
+- <wsdl:input>
+  <soap12:body use="literal" /> 
+  </wsdl:input>
+- <wsdl:output>
+  <soap12:body use="literal" /> 
+  </wsdl:output>
+  </wsdl:operation>
+  </wsdl:binding>
+- <wsdl:binding name="EODPaymentNotificationReportServiceHttpBinding" type="ns:EODPaymentNotificationReportServicePortType">
+  <http:binding verb="POST" /> 
+- <wsdl:operation name="processPaymentNotificationReport">
+  <http:operation location="processPaymentNotificationReport" /> 
+- <wsdl:input>
+  <mime:content type="text/xml" part="parameters" /> 
+  </wsdl:input>
+- <wsdl:output>
+  <mime:content type="text/xml" part="parameters" /> 
+  </wsdl:output>
+  </wsdl:operation>
+  </wsdl:binding>
+- <wsdl:service name="EODPaymentNotificationReportService">
+- <wsdl:port name="EODPaymentNotificationReportServiceHttpSoap11Endpoint" binding="ns:EODPaymentNotificationReportServiceSoap11Binding">
+  <soap:address location="http://172.16.0.69:9999/ZraWebService/services/EODPaymentNotificationReportService.EODPaymentNotificationReportServiceHttpSoap11Endpoint/" /> 
+  </wsdl:port>
+- <wsdl:port name="EODPaymentNotificationReportServiceHttpSoap12Endpoint" binding="ns:EODPaymentNotificationReportServiceSoap12Binding">
+  <soap12:address location="http://172.16.0.69:9999/ZraWebService/services/EODPaymentNotificationReportService.EODPaymentNotificationReportServiceHttpSoap12Endpoint/" /> 
+  </wsdl:port>
+- <wsdl:port name="EODPaymentNotificationReportServiceHttpEndpoint" binding="ns:EODPaymentNotificationReportServiceHttpBinding">
+  <http:address location="http://172.16.0.69:9999/ZraWebService/services/EODPaymentNotificationReportService.EODPaymentNotificationReportServiceHttpEndpoint/" /> 
+  </wsdl:port>
+  </wsdl:service>
+  </wsdl:definitions>
