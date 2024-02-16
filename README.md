@@ -5,7 +5,7 @@ SmartPay provides a platform for the payment of taxes in Zambia. Agents and Corp
 
 ## Technical Details
 
-The ecims mobile application is developed using Java, database is Microsoft SQL
+The SmartPay application is developed using Liferay a Java framework which provides portal development capabilities. Database used is Microsoft SQL
 
 ## Install the Java
 Before proceeding, make sure your computer has Java installed. Minimum version is Java 8. See Oracle website for documentation on Java installation
